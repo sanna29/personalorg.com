@@ -1,18 +1,52 @@
-# This .gitignore is appropriate for repositories deployed to GitHub Pages and using
-# a Gemfile as specified at https://github.com/github/pages-gem#conventional
+document.addEventListener('DOMContentLoaded', () => {
+    const addTaskButton = document.getElementById('add-task-button');
+    const newTaskInput = document.getElementById('new-task');
+    const tasksList = document.getElementById('tasks');
 
-# Basic Jekyll gitignores (synchronize to Jekyll.gitignore)
-_site/
-.sass-cache/
-.jekyll-cache/
-.jekyll-metadata
+    addTaskButton.addEventListener('click', () => {
+        const taskText = newTaskInput.value.trim();
+        if (taskText !== '') {
+            const listItem = document.createElement('li');
+            listItem.textContent = taskText;
+            tasksList.appendChild(listItem);
+            newTaskInput.value = '';
+        }
+    });
 
-# Additional Ruby/bundler ignore for when you run: bundle install
-/vendor
+    let timer;
+    const startTimerButton = document.getElementById('start-timer-button');
+    const resetTimerButton = document.getElementById('reset-timer-button');
+    const minutesSpan = document.getElementById('minutes');
+    const secondsSpan = document.getElementById('seconds');
 
-# Specific ignore for GitHub Pages
-# GitHub Pages will always use its own deployed version of pages-gem 
-# This means GitHub Pages will NOT use your Gemfile.lock and therefore it is
-# counterproductive to check this file into the repository.
-# Details at https://github.com/github/pages-gem/issues/768
-Gemfile.lock
+    startTimerButton.addEventListener('click', () => {
+        if (!timer) {
+            let minutes = 24;
+            let seconds = 59;
+            minutesSpan.textContent = minutes.toString().padStart(2, '0');
+            secondsSpan.textContent = seconds.toString().padStart(2, '0');
+            timer = setInterval(() => {
+                seconds--;
+                if (seconds < 0) {
+                    seconds = 59;
+                    minutes--;
+                }
+                if (minutes < 0) {
+                    clearInterval(timer);
+                    timer = null;
+                    alert('Time is up!');
+                } else {
+                    minutesSpan.textContent = minutes.toString().padStart(2, '0');
+                    secondsSpan.textContent = seconds.toString().padStart(2, '0');
+                }
+            }, 1000);
+        }
+    });
+
+    resetTimerButton.addEventListener('click', () => {
+        clearInterval(timer);
+        timer = null;
+        minutesSpan.textContent = '25';
+        secondsSpan.textContent = '00';
+    });
+});
